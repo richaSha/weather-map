@@ -2,3 +2,8 @@
   height: 500px;
   width: 100%;
 }
+.search{
+  width: 100%;
+  background: #fffae0;
+  border: 1px solid #ccc;
+}

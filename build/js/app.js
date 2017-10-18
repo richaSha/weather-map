@@ -49,14 +49,14 @@ var Map = exports.Map = function () {
     }
   }, {
     key: 'findWeather',
-    value: function findWeather(city) {
+    value: function findWeather(city, zoom) {
       var that = this;
       var request = new XMLHttpRequest();
       var url = 'http://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=6bae413a0dca3d1bf1c2de372588a226';
       request.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
           var response = JSON.parse(this.responseText);
-          that.setWeatherInfo(response);
+          that.setWeatherInfo(response, zoom);
         }
       };
       request.open("GET", url, true);
@@ -64,21 +64,17 @@ var Map = exports.Map = function () {
     }
   }, {
     key: 'setWeatherInfo',
-    value: function setWeatherInfo(response) {
-      var humidity = response.main.humidity;
-      var temp = response.main.temp;
-      var highTemp = response.main.temp_max;
-      var lowTemp = response.main.temp_min;
-      var speed = response.wind.speed;
-      var icon = response.weather[0].icon;
-      var lat = response.coord.lat;
-      var lon = response.coord.lon;
+    value: function setWeatherInfo(response, zoom) {
+      if (zoom) {
+        this.setNewMap(response.coord.lat, response.coord.lon);
+      }
       var contentString = '<div><h5>humidity= ' + response.main.humidity + '</h5><h5>Temp= ' + response.main.temp + '</h5><h5>Min Temp= z' + response.main.temp_min + '</h5><h5>Max Temp= ' + response.main.temp_max + '</h5> <h5>Wind spd= ' + response.wind.speed + '</h5><div>';
       this.setCustomMarker(response.weather[0].icon, response.coord.lat, response.coord.lon, contentString);
     }
   }, {
     key: 'setCustomMarker',
     value: function setCustomMarker(icons, lat, lon, contentString) {
+      var infowindow = null;
       var marker = new google.maps.Marker({
         position: { lat: lat, lng: lon },
         icon: 'http://openweathermap.org/img/w/' + icons + '.png',
@@ -87,12 +83,15 @@ var Map = exports.Map = function () {
         map: this.map
       });
 
-      var infowindow = new google.maps.InfoWindow({
-        content: contentString,
-        maxWidth: 200
-      });
-
       marker.addListener('click', function () {
+        debugger;
+        if (infowindow) {
+          infowindow.close();
+        }
+        infowindow = new google.maps.InfoWindow({
+          content: contentString,
+          maxWidth: 200
+        });
         infowindow.open(map, marker);
       });
     }
@@ -112,7 +111,7 @@ $(document).ready(function () {
 
   var initCountryWeather = function initCountryWeather() {
     $.each(arrayOfCountry, function (index, city) {
-      mapObject.findWeather(city);
+      mapObject.findWeather(city, false);
     });
   };
   var showPosition = function showPosition(position) {
@@ -129,6 +128,11 @@ $(document).ready(function () {
     }
   });
   initCountryWeather();
+
+  $('#search').click(function () {
+    var city = $('.city').val();
+    mapObject.findWeather(city, true);
+  });
 });
 
 },{"./../js/map.js":1}]},{},[2]);

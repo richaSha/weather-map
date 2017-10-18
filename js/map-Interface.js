@@ -6,7 +6,7 @@ $(document).ready(function() {
 
   let initCountryWeather = ()=>{
     $.each(arrayOfCountry,(index,city)=>{
-      mapObject.findWeather(city)
+      mapObject.findWeather(city, false)
     })
   }
   let showPosition = (position)=>{
@@ -23,4 +23,9 @@ $(document).ready(function() {
     }
   })
   initCountryWeather()
+
+  $('#search').click(function() {
+    let city = $('.city').val();
+    mapObject.findWeather(city, true);
+  })
 });
