@@ -14,7 +14,7 @@ export class Map {
     });
     google.maps.event.addListener(this.map, 'click', ( event )=>{
       let lat =event.latLng.lat();
-      let lon=event.latLng.lng();
+      let lon =event.latLng.lng();
       this.clickCityWeather(event.latLng.lat(), event.latLng.lng());
     });
 
