@@ -12,11 +12,30 @@ export class Map {
       center: {lat: this.lat, lng: this.long},
       zoom : this.zoom
     });
+    google.maps.event.addListener(this.map, 'click', ( event )=>{
+      let lat =event.latLng.lat();
+      let lon=event.latLng.lng();
+      this.clickCityWeather(event.latLng.lat(), event.latLng.lng());
+    });
+
+  }
+  clickCityWeather(lat ,lng){
+    let that =this;
+    let request = new XMLHttpRequest();
+    let url = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=6bae413a0dca3d1bf1c2de372588a226`;
+    request.onreadystatechange = function() {
+      if (this.readyState === 4 && this.status === 200) {
+        let response = JSON.parse(this.responseText);
+        that.setWeatherInfo(response, true);
+        that.zoom = 4;
+      }
+    }
+    request.open("GET", url, true);
+    request.send();
   }
   setNewMap(lat, long){
     this.lat = lat;
     this.long = long;
-    this.zoom = 12;
     this.initMap();
     this.setMarker();
   }
@@ -34,6 +53,9 @@ export class Map {
     request.onreadystatechange = function() {
       if (this.readyState === 4 && this.status === 200) {
         let response = JSON.parse(this.responseText);
+        if(zoom){
+          that.zoom = 12;
+        }
         that.setWeatherInfo(response, zoom);
       }
     }
@@ -44,7 +66,7 @@ export class Map {
     if(zoom){
       this.setNewMap(response.coord.lat, response.coord.lon);
     }
-    let contentString = `<div><h5>humidity= ${response.main.humidity}</h5><h5>Temp= ${response.main.temp}</h5><h5>Min Temp= z${response.main.temp_min}</h5><h5>Max Temp= ${response.main.temp_max}</h5> <h5>Wind spd= ${response.wind.speed}</h5><div>`
+    let contentString = `<div><h5>Name= ${response.name}</h5><h5>Country= ${response.sys.country}</h5><h5>humidity= ${response.main.humidity}</h5><h5>Temp= ${response.main.temp}</h5><h5>Min Temp= z${response.main.temp_min}</h5><h5>Max Temp= ${response.main.temp_max}</h5> <h5>Wind spd= ${response.wind.speed}</h5><div>`
     this.setCustomMarker(response.weather[0].icon, response.coord.lat, response.coord.lon, contentString)
   }
   setCustomMarker(icons, lat, lon, contentString){
@@ -58,9 +80,7 @@ export class Map {
     });
 
 
-
     marker.addListener('click', function(){
-      debugger;
       if (infowindow) {
           infowindow.close();
       }

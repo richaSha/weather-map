@@ -11,25 +11,29 @@
 </head>
   <body>
     <div class="jumbotron">
-      <h1>Weather map</h1>
+      <h1>Weather App</h1>
     </div>
     <div class="container-fluid">
       <div class="search row">
-        <div class="col-sm-4">
-          <span>Find by current location.</span>
-          <span>Find by search.</span>
+        <div class="col-sm-4 buttonWrapper">
+          <span class="loctionbtn active">Find by current location.</span>
+          <span class="searchBtn">Find by search.</span>
         </div>
         <div class="col-sm-8">
           <div class="current">
             <button type="button" class="currentLocation">Find current location.</button>
           </div>
-          <div class="search">
+          <div class="searchLocation hide">
             <input type="text" class="city" >
             <button type="button" id="search">Search for a location.</button>
           </div>
         </div>
       </div>
-      <div id="map">
+      <div class="mapWrapper">
+        <div id="map">
+        </div>
+      </div>
+      <div class="cityInfo">
       </div>
     </div>
   </body>

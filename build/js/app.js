@@ -23,18 +23,39 @@ var Map = exports.Map = function () {
   _createClass(Map, [{
     key: 'initMap',
     value: function initMap() {
+      var _this = this;
 
       this.map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: this.lat, lng: this.long },
         zoom: this.zoom
       });
+      google.maps.event.addListener(this.map, 'click', function (event) {
+        var lat = event.latLng.lat();
+        var lon = event.latLng.lng();
+        _this.clickCityWeather(event.latLng.lat(), event.latLng.lng());
+      });
+    }
+  }, {
+    key: 'clickCityWeather',
+    value: function clickCityWeather(lat, lng) {
+      var that = this;
+      var request = new XMLHttpRequest();
+      var url = 'http://api.openweathermap.org/data/2.5/weather?lat=' + lat + '&lon=' + lng + '&appid=6bae413a0dca3d1bf1c2de372588a226';
+      request.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+          var response = JSON.parse(this.responseText);
+          that.setWeatherInfo(response, true);
+          that.zoom = 4;
+        }
+      };
+      request.open("GET", url, true);
+      request.send();
     }
   }, {
     key: 'setNewMap',
     value: function setNewMap(lat, long) {
       this.lat = lat;
       this.long = long;
-      this.zoom = 12;
       this.initMap();
       this.setMarker();
     }
@@ -56,6 +77,9 @@ var Map = exports.Map = function () {
       request.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
           var response = JSON.parse(this.responseText);
+          if (zoom) {
+            that.zoom = 12;
+          }
           that.setWeatherInfo(response, zoom);
         }
       };
@@ -68,7 +92,7 @@ var Map = exports.Map = function () {
       if (zoom) {
         this.setNewMap(response.coord.lat, response.coord.lon);
       }
-      var contentString = '<div><h5>humidity= ' + response.main.humidity + '</h5><h5>Temp= ' + response.main.temp + '</h5><h5>Min Temp= z' + response.main.temp_min + '</h5><h5>Max Temp= ' + response.main.temp_max + '</h5> <h5>Wind spd= ' + response.wind.speed + '</h5><div>';
+      var contentString = '<div><h5>Name= ' + response.name + '</h5><h5>Country= ' + response.sys.country + '</h5><h5>humidity= ' + response.main.humidity + '</h5><h5>Temp= ' + response.main.temp + '</h5><h5>Min Temp= z' + response.main.temp_min + '</h5><h5>Max Temp= ' + response.main.temp_max + '</h5> <h5>Wind spd= ' + response.wind.speed + '</h5><div>';
       this.setCustomMarker(response.weather[0].icon, response.coord.lat, response.coord.lon, contentString);
     }
   }, {
@@ -84,7 +108,6 @@ var Map = exports.Map = function () {
       });
 
       marker.addListener('click', function () {
-        debugger;
         if (infowindow) {
           infowindow.close();
         }
@@ -132,6 +155,22 @@ $(document).ready(function () {
   $('#search').click(function () {
     var city = $('.city').val();
     mapObject.findWeather(city, true);
+  });
+
+  $('.loctionbtn').click(function (e) {
+    e.preventDefault();
+    $(this).addClass("active");
+    $('.current').removeClass("hide");
+    $('.searchLocation').addClass("hide");
+    $('.searchBtn').removeClass("active");
+  });
+
+  $('.searchBtn').click(function (e) {
+    e.preventDefault();
+    $(this).addClass("active");
+    $('.current').addClass("hide");
+    $('.searchLocation').removeClass("hide");
+    $('.loctionbtn').removeClass("active");
   });
 });
 

@@ -76,7 +76,7 @@ gulp.task('bowerCSS', function () {
     .pipe(gulp.dest('./build/css'));
 });
 
-gulp.task('bower', ['bowerJS', 'bowerCSS','cssBuild']);
+gulp.task('bower', ['bowerJS', 'bowerCSS','cssBuild', 'imgBuild']);
 
 gulp.task('serve', function() {
   browserSync.init({
@@ -102,4 +102,10 @@ gulp.task("cssBuild", function() {
   gulp.src(['css/*.css'])
   .pipe(concat('app.css'))
   .pipe(gulp.dest('./build/css'))
+});
+
+gulp.task("imgBuild", function() {
+  gulp.src(['img/*.gif'])
+  .pipe(concat('img.gif'))
+  .pipe(gulp.dest('./build/img'))
 });

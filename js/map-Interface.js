@@ -28,4 +28,20 @@ $(document).ready(function() {
     let city = $('.city').val();
     mapObject.findWeather(city, true);
   })
+
+  $('.loctionbtn').click(function(e){
+    e.preventDefault();
+    $(this).addClass("active");
+    $('.current').removeClass("hide");
+    $('.searchLocation').addClass("hide");
+    $('.searchBtn').removeClass("active");
+  })
+
+  $('.searchBtn').click(function(e){
+    e.preventDefault();
+    $(this).addClass("active");
+    $('.current').addClass("hide");
+    $('.searchLocation').removeClass("hide");
+    $('.loctionbtn').removeClass("active");
+  })
 });

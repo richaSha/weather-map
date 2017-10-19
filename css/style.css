@@ -4,6 +4,57 @@
 }
 .search{
   width: 100%;
-  background: #fffae0;
-  border: 1px solid #ccc;
+  background: #ebd6ec;
+  border: 3px solid #a180a5;
+  margin: 0;
+  text-align: center;
+  border-bottom-width: 0;
+}
+.buttonWrapper{
+  background: #0ed2c9;
+  height: 7rem;
+  color: #fff;
+  padding: 0;
+  overflow: hidden;
+}
+.buttonWrapper span{
+  display: block;
+  padding: 0.7rem;
+  border-top: 1px solid #e4b1e8;
+  border-bottom: 1px solid #6c4d6f;
+  font-family: sans-serif;
+  font-weight: 600;
+  overflow: hidden;
+  background: #b897bb;
+  text-align: left;
+}
+.buttonWrapper span:hover, .active{
+  background: #9b6d9e !important;
+
+}
+.active{
+  color: #9C27B0;
+}
+.searchLocation, .current {
+  padding: 2rem;
+}
+.searchLocation input{
+  border: 2px solid #a180a4;
+}
+.container-fluid {
+  padding: 0;
+}
+.mapWrapper{
+  border: 4px solid #a180a5;
+}
+.jumbotron{
+  background-image: url(./../img/img.gif);
+  background-size: cover;
+  color: #a180a5;
+  text-align: center;
+  margin: 0;
+}
+.currentLocation, #search{
+  background: #a180a4;
+  color: #fff;
 }
